@@ -4,6 +4,8 @@ import com.ps.CustomerMiyagi.data.CustomerDao;
 import com.ps.CustomerMiyagi.models.Customer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -112,6 +114,19 @@ public void updateCustomer(int id, Customer customer){
         e.printStackTrace();
     }
     }
+
+    @Override
+    public void deleteACustomer(int id){
+        String query = "delete from customer where customer_id = ?";
+        try(
+                Connection connection = this.dataSource.getConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement(query);
+        ) {
+            preparedStatement.setInt(1, id);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        }
 
 
     //mapping a customer

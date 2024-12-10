@@ -48,7 +48,8 @@ public class CustomerController {
     }
 
     @DeleteMapping("{id}")
-    public void deleteCustomer(@PathVariable int id, @RequestBody Customer customer) {
+    public void deleteCustomer(@PathVariable int id) {
+        dao.deleteACustomer(id);
 
     }
 }
