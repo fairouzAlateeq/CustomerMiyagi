@@ -9,6 +9,12 @@ public class Customer {
     //an empty constructor cause this will be a bean which is something we'll inject is sql i think
     public Customer(){}
 
+    public Customer(int customerId, String name, String phone) {
+        this.customerId = customerId;
+        this.name = name;
+        this.phone = phone;
+    }
+
     public int getCustomerId() {
         return customerId;
     }

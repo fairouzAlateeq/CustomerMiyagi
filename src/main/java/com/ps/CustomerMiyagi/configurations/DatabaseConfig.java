@@ -22,7 +22,7 @@ public class DatabaseConfig {
                           @Value("${datasource.username}") String username,
                           @Value("${datasource.password}") String password
     ) {
-        basicDataSource = new basicDataSource();
+        basicDataSource = new BasicDataSource();
             basicDataSource.setUrl(url);
             basicDataSource.setUsername(username);
             basicDataSource.setPassword(password);
