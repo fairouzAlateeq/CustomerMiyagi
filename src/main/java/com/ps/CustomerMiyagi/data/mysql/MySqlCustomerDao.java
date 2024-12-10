@@ -43,7 +43,7 @@ public class MySqlCustomerDao implements CustomerDao {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return null;
+        return customers;
     }
 
     //mapping a customer
