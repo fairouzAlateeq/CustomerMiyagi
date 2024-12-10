@@ -46,6 +46,27 @@ public class MySqlCustomerDao implements CustomerDao {
         return customers;
     }
 
+    @Override
+    public Customer findOneCustomer(int id){
+        String query = "Select * from customer where customer_id = ?";
+        try (
+                Connection connection = this.dataSource.getConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement(query);
+        ){
+                // instead of Resultset we need to set the id; so now nested try
+                preparedStatement.setInt(1, id);
+                try(
+                ResultSet resultSet = preparedStatement.executeQuery();
+
+                ) {
+                    //cause we only have one
+                    if (resultSet.next()) {
+                        Customer customer = mapCustomer(resultSet);
+                    }
+                }
+        }catch(SQLException e) {e.printStackTrace();}
+        return null;
+    }
     //mapping a customer
 
     private Customer mapCustomer(ResultSet resultSet) throws SQLException {

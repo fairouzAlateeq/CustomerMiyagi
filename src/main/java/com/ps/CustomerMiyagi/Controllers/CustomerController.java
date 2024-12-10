@@ -5,6 +5,7 @@ import com.ps.CustomerMiyagi.models.Customer;
 import com.ps.CustomerMiyagi.services.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -27,6 +28,10 @@ public class CustomerController {
 //        this.customerService = customerService;
 //    }
 
+    @GetMapping("/api/customers/{id}")
+    public List<Customer> getOneCustomer(@PathVariable int id){
+        return dao.findOneCustomer(id);
+    }
     // to listen to get requests
     @GetMapping ("/api/customers")  //this is an end point to retrieve from customers db
     public List<Customer> getAllCustomers(){
@@ -34,6 +39,7 @@ public class CustomerController {
        return dao.findAll();
 
     }
+
 
 }
 
