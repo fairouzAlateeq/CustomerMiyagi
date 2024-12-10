@@ -6,10 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,23 +16,23 @@ public class MySqlCustomerDao implements CustomerDao {
     private DataSource dataSource;
 
     @Autowired
-    public MySqlCustomerDao(DataSource datasource){
+    public MySqlCustomerDao(DataSource datasource) {
         this.dataSource = datasource;
     }
 
 
     @Override
-    public List<Customer> findAll(){
+    public List<Customer> findAll() {
         //System.out.println(dataSource);
         String query = "Select * from customer;";
         List<Customer> customers = new ArrayList<>();
-        try(
+        try (
                 Connection connection = this.dataSource.getConnection();
                 PreparedStatement preparedStatement = connection.prepareStatement(query);
                 ResultSet resultSet = preparedStatement.executeQuery();
-                ) {
+        ) {
 
-            while(resultSet.next()) {
+            while (resultSet.next()) {
                 Customer customer = mapCustomer(resultSet);
                 customers.add(customer);
             }
@@ -47,26 +44,76 @@ public class MySqlCustomerDao implements CustomerDao {
     }
 
     @Override
-    public Customer findOneCustomer(int id){
+    public Customer findOneCustomer(int id) {
         String query = "Select * from customer where customer_id = ?";
         try (
                 Connection connection = this.dataSource.getConnection();
                 PreparedStatement preparedStatement = connection.prepareStatement(query);
-        ){
-                // instead of Resultset we need to set the id; so now nested try
-                preparedStatement.setInt(1, id);
-                try(
-                ResultSet resultSet = preparedStatement.executeQuery();
+        ) {
+            // instead of Resultset we need to set the id; so now nested try
+            preparedStatement.setInt(1, id);
+            try (
+                    ResultSet resultSet = preparedStatement.executeQuery();
 
-                ) {
-                    //cause we only have one
-                    if (resultSet.next()) {
-                        Customer customer = mapCustomer(resultSet);
-                    }
+            ) {
+                //cause we only have one
+                if (resultSet.next()) {
+                    Customer customer = mapCustomer(resultSet);
                 }
-        }catch(SQLException e) {e.printStackTrace();}
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return null;
     }
+
+    @Override
+    public Customer createCustomer(Customer customer) {
+        String query = "Insert into customer('name, 'phone') values(?,?)";
+        try (
+                Connection connection = this.dataSource.getConnection();
+                // we request the generated keys
+                PreparedStatement preparedStatement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+        ) {
+            preparedStatement.setString(1, customer.getName());
+            preparedStatement.setString(2, customer.getPhone());
+            // to make sure it excuted
+            int rows = preparedStatement.executeUpdate();
+            if (rows > 0) {
+                try (
+                        ResultSet resultSet = preparedStatement.getGeneratedKeys();
+                        ) {
+
+                    if(resultSet.next()){
+                        customer.setCustomerId(resultSet.getInt(1));
+                        return customer;
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+return null;
+}
+
+@Override
+public void updateCustomer(int id, Customer customer){
+        String query = "update customer set name = ?, phone = ? where customer_id = ?";
+    try(
+            Connection connection = this.dataSource.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+    ) {
+        preparedStatement.setString(1, customer.getName());
+        preparedStatement.setString(2, customer.getPhone());
+        preparedStatement.setInt(3, id);
+
+        preparedStatement.executeUpdate();
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    }
+
+
     //mapping a customer
 
     private Customer mapCustomer(ResultSet resultSet) throws SQLException {
