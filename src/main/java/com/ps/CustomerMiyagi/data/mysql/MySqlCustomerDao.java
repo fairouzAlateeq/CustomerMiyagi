@@ -48,6 +48,7 @@ public class MySqlCustomerDao implements CustomerDao {
     @Override
     public Customer findOneCustomer(int id) {
         String query = "Select * from customer where customer_id = ?";
+        Customer customer = null;
         try (
                 Connection connection = this.dataSource.getConnection();
                 PreparedStatement preparedStatement = connection.prepareStatement(query);
@@ -60,13 +61,13 @@ public class MySqlCustomerDao implements CustomerDao {
             ) {
                 //cause we only have one
                 if (resultSet.next()) {
-                    Customer customer = mapCustomer(resultSet);
+                    customer = mapCustomer(resultSet);
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return null;
+        return customer;
     }
 
     @Override
