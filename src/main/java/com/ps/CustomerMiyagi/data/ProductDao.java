@@ -1,14 +1,14 @@
 package com.ps.CustomerMiyagi.data;
 
-import com.ps.CustomerMiyagi.models.Customer;
+import com.ps.CustomerMiyagi.models.Product;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 
 public interface ProductDao {
-    List<Customer> findAllProducts();
-    Customer findOneProduct(int id);
-    Customer createProduct(Customer customer);
-    void updateProduct(int id, Customer customer);
+    List<Product> findAllProducts();
+    Product findOneProduct(int id);
+    Product createProduct(Product product);
+    void updateProduct(int id, Product product);
     void deleteAProduct(@PathVariable int id);
 }

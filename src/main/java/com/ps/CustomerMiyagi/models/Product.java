@@ -3,15 +3,15 @@ package com.ps.CustomerMiyagi.models;
 public class Product {
     private int productId;
     private String name;
-    private String type;
+    private float price;
 
     public Product() {
     }
 
-    public Product(int productId, String name, String type) {
+    public Product(int productId, String name, float price) {
         this.productId = productId;
         this.name = name;
-        this.type = type;
+        this.price = price;
     }
 
     public int getProductId() {
@@ -30,11 +30,12 @@ public class Product {
         this.name = name;
     }
 
-    public String getType() {
-        return type;
+    public float getPrice() {
+        return price;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setPrice(float price) {
+        this.price = price;
     }
+
 }
