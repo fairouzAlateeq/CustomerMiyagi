@@ -21,8 +21,27 @@ public class MySqlProductDao implements ProductDao {
     }
 
     @Override
-    public List<Product> findAllProducts(String name, String sort, String order){
-        String query = "SELECT * FROM product;";
+    public List<Product> findAllProducts(String sort){
+
+        if(sort == null){
+            sort = "product_id";
+        }
+        String[] acceptableSorts = {"product_id", "name", "phone", "category_id" };
+        boolean isAcceptable = false;
+
+        for (String sortName : acceptableSorts) {
+            if (sortName.equals(sort)) {
+                isAcceptable = true;
+            }
+        }
+
+        if (!isAcceptable) {
+            System.out.println("Sort value not acceptable");
+            return null;
+        }
+
+        String query = "SELECT * FROM product order by " + sort + ";";
+
         List<Product> products = new ArrayList<>();
         try (
                 Connection connection = this.dataSource.getConnection();
