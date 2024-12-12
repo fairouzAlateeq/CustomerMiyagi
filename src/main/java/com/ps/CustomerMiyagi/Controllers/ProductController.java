@@ -1,5 +1,7 @@
 package com.ps.CustomerMiyagi.Controllers;
 
+import com.ps.CustomerMiyagi.data.CustomerDao;
+import com.ps.CustomerMiyagi.data.ProductDao;
 import com.ps.CustomerMiyagi.models.Product;
 import org.springframework.web.bind.annotation.*;
 
@@ -9,11 +11,12 @@ import java.util.List;
 @RequestMapping("/api/products")
 public class ProductController {
 
+    private ProductDao dao;
     // get one
     @GetMapping("{id}")
     public Product findOneProduct(int id) {
 
-        return null;
+        return dao.findOneProduct(id);
     }
 
     // get all
@@ -28,25 +31,25 @@ public class ProductController {
             ){
         System.out.println("Get All Products was triggered " +  name + " " + sort + " " + order);
 
-        return null;
+        return dao.findAllProducts(sort);
     }
 
     //create
     @PostMapping("{id}")
     public Product createProduct(Product product){
-        return null;
+        return dao.createProduct(product);
     }
 
 
     // update
     @PutMapping("{id}")
     public void updateProduct(int id, Product product){
-
+          dao.updateProduct(id, product);
     }
 
     //delete
     @DeleteMapping("{id}")
     public void deleteAProduct(@PathVariable int id) {
-
+        dao.deleteAProduct(id);
     }
 }
